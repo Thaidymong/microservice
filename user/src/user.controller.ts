@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { USER_PATTERN } from './patterns';
+import { UserRegistrationDto } from './dto/user-registration-input.dto';
 
 @Controller()
 export class UserController {
@@ -9,5 +11,10 @@ export class UserController {
   @MessagePattern('user.getHello')
   getHello(): string {
     return this.userService.getHello();
+  }
+
+  @MessagePattern(USER_PATTERN.CREATE)
+  async register(@Payload() input: UserRegistrationDto) {
+    return this.userService.create(input);
   }
 }
